@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class BooksList(
-    val items: ArrayList<Book>
+    val items: List<Book>
 )

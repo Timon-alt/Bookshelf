@@ -9,6 +9,6 @@ data class BookInfo(
     val authors: ArrayList<String>,
     val publishedDate: String,
     val pageCount: Int,
-    val imageList: ArrayList<String>,
+    val imageList: List<String>,
     val description: String
 )
