@@ -4,7 +4,7 @@ import retrofit2.http.GET
 
 interface BooksApiService {
 
-    @GET("programming+programming")
+    @GET("volumes?q=jazz+history")
     suspend fun getBooksList() {
     }
 
