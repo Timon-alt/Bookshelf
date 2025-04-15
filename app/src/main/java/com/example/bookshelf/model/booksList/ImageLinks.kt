@@ -1,6 +1,5 @@
-package com.example.bookshelf.model
+package com.example.bookshelf.model.booksList
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable

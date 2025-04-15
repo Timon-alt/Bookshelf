@@ -13,11 +13,14 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.bookshelf.BookshelfApplication
 import com.example.bookshelf.data.BooksRepository
-import com.example.bookshelf.model.Book
-import com.example.bookshelf.model.BooksList
+import com.example.bookshelf.model.booksList.Book
+import com.example.bookshelf.model.booksList.BooksList
 import kotlinx.coroutines.launch
 import okio.IOException
 
+/**
+ * UI state for MainScreen
+ */
 sealed interface UiState {
     data class Success(val booksList: MutableList<Book>) : UiState
     object Error : UiState
@@ -25,11 +28,9 @@ sealed interface UiState {
 }
 
 class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewModel() {
-
+    /**The mutable State that stores the status of the most recent request**/
     var uiState: UiState by mutableStateOf(UiState.Loading)
         private set
-
-    private val _books = mutableListOf<Book>()
 
     init {
         getBooksList()
@@ -39,7 +40,7 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         viewModelScope.launch {
             uiState = UiState.Loading
             uiState = try {
-                UiState.Success(retrieveBooks(booksRepository.getBooksList()))
+                UiState.Success(retrieveBooks(booksRepository.getBooksList("programming+mechanics")))
             } catch (e: IOException) {
                 UiState.Error
             } catch (e: HttpException) {
@@ -52,20 +53,20 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         val listOfBooks = mutableListOf<Book>()
 
         booksList.items.forEach {
-            listOfBooks.add(it)
-        }
-
-        listOfBooks.forEach {
             it.volumeInfo.imageLinks.thumbnail.replace("http", "https")
+            listOfBooks.add(it)
         }
 
         return listOfBooks
     }
 
-    fun getBook(id: Int) {
+    fun getBook(id: String) {
 
     }
 
+    /**
+     * Factory for [BookshelfViewModel] that takes [BooksRepository] as a dependency
+     */
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
