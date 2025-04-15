@@ -1,8 +1,9 @@
 package com.example.bookshelf.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BookInfo(
-    val imageLinks: ImageLinks
+data class ImageLinks(
+     val thumbnail : String
 )

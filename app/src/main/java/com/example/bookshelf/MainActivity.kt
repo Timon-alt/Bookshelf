@@ -17,7 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bookshelf.ui.BookshelfApp
 import com.example.bookshelf.ui.screens.BookshelfViewModel
+import com.example.bookshelf.ui.screens.MainScreen
 import com.example.bookshelf.ui.screens.UiState
 import com.example.bookshelf.ui.theme.BookshelfTheme
 
@@ -27,7 +29,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BookshelfTheme {
-
+                BookshelfApp()
             }
         }
     }

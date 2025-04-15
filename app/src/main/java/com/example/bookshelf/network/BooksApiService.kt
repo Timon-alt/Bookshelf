@@ -11,7 +11,7 @@ interface BooksApiService {
     @GET("volumes")
     suspend fun getBooksList(
         @Query("q") query: String
-    ): List<BooksList>
+    ): BooksList
 
     @GET("volumes/{id}")
     suspend fun getBook(

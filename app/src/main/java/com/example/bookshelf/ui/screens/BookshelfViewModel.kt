@@ -13,12 +13,13 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.bookshelf.BookshelfApplication
 import com.example.bookshelf.data.BooksRepository
+import com.example.bookshelf.model.Book
 import com.example.bookshelf.model.BooksList
 import kotlinx.coroutines.launch
 import okio.IOException
 
 sealed interface UiState {
-    data class Success(val booksList: List<BooksList>) : UiState
+    data class Success(val booksList: MutableList<Book>) : UiState
     object Error : UiState
     object Loading : UiState
 }
@@ -28,6 +29,8 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
     var uiState: UiState by mutableStateOf(UiState.Loading)
         private set
 
+    private val _books = mutableListOf<Book>()
+
     init {
         getBooksList()
     }
@@ -36,7 +39,7 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         viewModelScope.launch {
             uiState = UiState.Loading
             uiState = try {
-                UiState.Success(booksRepository.getBooksList())
+                UiState.Success(retrieveBooks(booksRepository.getBooksList()))
             } catch (e: IOException) {
                 UiState.Error
             } catch (e: HttpException) {
@@ -45,7 +48,21 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         }
     }
 
-    fun getBook() {
+    private fun retrieveBooks(booksList: BooksList) : MutableList<Book> {
+        val listOfBooks = mutableListOf<Book>()
+
+        booksList.items.forEach {
+            listOfBooks.add(it)
+        }
+
+        listOfBooks.forEach {
+            it.volumeInfo.imageLinks.thumbnail.replace("http", "https")
+        }
+
+        return listOfBooks
+    }
+
+    fun getBook(id: Int) {
 
     }
 
