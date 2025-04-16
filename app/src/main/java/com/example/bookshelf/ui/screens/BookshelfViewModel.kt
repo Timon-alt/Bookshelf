@@ -13,8 +13,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.network.HttpException
 import com.example.bookshelf.BookshelfApplication
 import com.example.bookshelf.data.BooksRepository
-import com.example.bookshelf.model.booksList.Book
-import com.example.bookshelf.model.booksList.BooksList
+import com.example.bookshelf.model.Book
+import com.example.bookshelf.model.BookDetails
+import com.example.bookshelf.model.BooksList
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -22,7 +23,7 @@ import okio.IOException
  * UI state for MainScreen
  */
 sealed interface UiState {
-    data class Success(val booksList: MutableList<Book>) : UiState
+    data class Success(val booksList: MutableList<BookDetails>) : UiState
     object Error : UiState
     object Loading : UiState
 }
@@ -40,7 +41,9 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         viewModelScope.launch {
             uiState = UiState.Loading
             uiState = try {
-                UiState.Success(retrieveBooks(booksRepository.getBooksList("programming+mechanics")))
+                UiState.Success(
+                    retrieveBooks(booksRepository.getBooksList("programming+mechanics"))
+                )
             } catch (e: IOException) {
                 UiState.Error
             } catch (e: HttpException) {
@@ -49,19 +52,20 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         }
     }
 
-    private fun retrieveBooks(booksList: BooksList) : MutableList<Book> {
-        val listOfBooks = mutableListOf<Book>()
+    private fun retrieveBooks(booksList: BooksList) : MutableList<BookDetails> {
+        val listOfBooks = mutableListOf<BookDetails>()
 
-        booksList.items.forEach {
-            it.volumeInfo.imageLinks.thumbnail.replace("http", "https")
-            listOfBooks.add(it)
+        viewModelScope.launch {
+            booksList.items.forEach { item ->
+                val book = booksRepository.getBook(item.id)
+
+                book.volumeInfo.imageLinks?.thumbnail = book.volumeInfo.imageLinks?.thumbnail
+                    ?.replace("http", "https")
+
+                listOfBooks.add(book)
+            }
         }
-
         return listOfBooks
-    }
-
-    fun getBook(id: String) {
-
     }
 
     /**

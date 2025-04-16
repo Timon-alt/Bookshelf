@@ -4,4 +4,6 @@
     <string name="loading">Loading</string>
     <string name="connection_error">Connection error</string>
     <string name="retry_button">Retry button</string>
+    <string name="back_button">back button</string>
+    <string name="screen_description">About book</string>
 </resources>

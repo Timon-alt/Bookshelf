@@ -24,8 +24,9 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.bookshelf.R
-import com.example.bookshelf.model.booksList.Book
-import com.example.bookshelf.model.booksList.BookInfo
+import com.example.bookshelf.model.Book
+import com.example.bookshelf.model.BookDetails
+import com.example.bookshelf.model.VolumeInfo
 
 @Composable
 fun MainScreen(
@@ -72,7 +73,7 @@ fun ErrorScreen(onRetry: () -> Unit) {
 
 @Composable
 fun BooksGrid(
-    books: List<Book>,
+    books: List<BookDetails>,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
@@ -83,18 +84,18 @@ fun BooksGrid(
 
     ) {
         items(items = books, key = {book -> book.id}) { book ->
-            BookImage(book.volumeInfo, book.id)
+            BookImage(book.volumeInfo)
         }
     }
 
 }
 
 @Composable
-fun BookImage(bookInfo: BookInfo, bookId: String) {
-    Log.d("BookImage: ", "${bookInfo.imageLinks.thumbnail}")
+fun BookImage(volumeInfo: VolumeInfo) {
+    Log.d("BookImage: ", "${volumeInfo.imageLinks?.thumbnail}")
     AsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
-            .data(bookInfo.imageLinks.thumbnail)
+            .data(volumeInfo.imageLinks?.thumbnail)
             .crossfade(true)
             .build(),
         error = painterResource(R.drawable.ic_broken_image),

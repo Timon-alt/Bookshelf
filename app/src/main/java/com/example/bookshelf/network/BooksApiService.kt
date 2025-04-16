@@ -1,8 +1,8 @@
 package com.example.bookshelf.network
 
-import com.example.bookshelf.model.bookDescription.Book
-import com.example.bookshelf.model.booksList.BookInfo
-import com.example.bookshelf.model.booksList.BooksList
+import com.example.bookshelf.model.Book
+import com.example.bookshelf.model.BookDetails
+import com.example.bookshelf.model.BooksList
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -26,5 +26,5 @@ interface BooksApiService {
     @GET("volumes/{id}")
     suspend fun getBook(
         @Path("id") id: String
-    ): Book
+    ): BookDetails
 }

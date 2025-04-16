@@ -1,7 +1,8 @@
 package com.example.bookshelf.data
 
-import com.example.bookshelf.model.bookDescription.Book
-import com.example.bookshelf.model.booksList.BooksList
+import com.example.bookshelf.model.Book
+import com.example.bookshelf.model.BookDetails
+import com.example.bookshelf.model.BooksList
 import com.example.bookshelf.network.BooksApiService
 
 /**
@@ -10,7 +11,7 @@ import com.example.bookshelf.network.BooksApiService
 interface BooksRepository {
     suspend fun getBooksList(query: String) : BooksList
 
-    suspend fun getBook(id: String) : Book
+    suspend fun getBook(id: String) : BookDetails
 }
 
 /**
@@ -23,5 +24,6 @@ class NetworkBooksRepository(
     override suspend fun getBooksList(query: String): BooksList =
         booksApiService.getBooksList(query)
 
-    override suspend fun getBook(id: String) : Book = booksApiService.getBook(id)
+    override suspend fun getBook(id: String) : BookDetails =
+        booksApiService.getBook(id)
 }
