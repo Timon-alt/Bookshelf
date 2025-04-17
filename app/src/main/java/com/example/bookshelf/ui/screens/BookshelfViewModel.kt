@@ -52,6 +52,10 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
         }
     }
 
+    fun getBookInfo(bookId: String) {
+
+    }
+
     private fun retrieveBooks(booksList: BooksList) : MutableList<BookDetails> {
         val listOfBooks = mutableListOf<BookDetails>()
 

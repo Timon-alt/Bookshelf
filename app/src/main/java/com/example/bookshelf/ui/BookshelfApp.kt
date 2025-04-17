@@ -34,9 +34,14 @@ import com.example.bookshelf.ui.screens.BookshelfViewModel
 import com.example.bookshelf.ui.screens.DetailsScreen
 import com.example.bookshelf.ui.screens.MainScreen
 
+enum class BookshelfScreens(@StringRes val title: Int) {
+    Main(title = R.string.app_name),
+    Description(title = R.string.screen_description)
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookshelfApp() {
+fun BookshelfApp(navHostController: NavHostController = rememberNavController()) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -47,11 +52,24 @@ fun BookshelfApp() {
         ) {
             val bookshelfViewModel: BookshelfViewModel =
                 viewModel(factory = BookshelfViewModel.Factory)
-            MainScreen(
-                uiState = bookshelfViewModel.uiState,
-                contentPadding = it,
-                onRetry = bookshelfViewModel::getBooksList
-            )
+            NavHost(
+                navController = navHostController,
+                startDestination = BookshelfScreens.Main.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+            ) {
+                composable(route = BookshelfScreens.Main.name) {
+                    MainScreen(
+                        uiState = bookshelfViewModel.uiState,
+                        onRetry = bookshelfViewModel::getBooksList,
+                        onClick = { navHostController.navigate(BookshelfScreens.Description.name) }
+                    )
+                }
+                composable(route = BookshelfScreens.Description.name) {
+                    // DetailsScreen()
+                }
+            }
         }
     }
 }
