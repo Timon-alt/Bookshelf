@@ -49,6 +49,7 @@ fun MainScreen(
             contentPadding = contentPadding,
             onClick = onClick
         )
+        is UiState.Description -> DetailssScreen()
     }
 }
 
@@ -127,4 +128,12 @@ fun BookImage(volumeInfo: VolumeInfo, modifier: Modifier = Modifier) {
             modifier = Modifier.fillMaxSize()
         )
     }
+}
+
+@Composable
+fun DetailssScreen() {
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.Start
+    ) {}
 }

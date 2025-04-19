@@ -16,6 +16,7 @@ import com.example.bookshelf.data.BooksRepository
 import com.example.bookshelf.model.Book
 import com.example.bookshelf.model.BookDetails
 import com.example.bookshelf.model.BooksList
+import com.example.bookshelf.model.VolumeInfo
 import kotlinx.coroutines.launch
 import okio.IOException
 
@@ -24,6 +25,7 @@ import okio.IOException
  */
 sealed interface UiState {
     data class Success(val booksList: MutableList<BookDetails>) : UiState
+    data class Description(val bookInfo: VolumeInfo) : UiState
     object Error : UiState
     object Loading : UiState
 }
@@ -56,18 +58,16 @@ class BookshelfViewModel(private val booksRepository: BooksRepository) : ViewMod
 
     }
 
-    private fun retrieveBooks(booksList: BooksList) : MutableList<BookDetails> {
+    private suspend fun retrieveBooks(booksList: BooksList) : MutableList<BookDetails> {
         val listOfBooks = mutableListOf<BookDetails>()
 
-        viewModelScope.launch {
-            booksList.items.forEach { item ->
-                val book = booksRepository.getBook(item.id)
+        booksList.items.forEach { item ->
+            val book = booksRepository.getBook(item.id)
 
-                book.volumeInfo.imageLinks?.thumbnail = book.volumeInfo.imageLinks?.thumbnail
-                    ?.replace("http", "https")
+            book.volumeInfo.imageLinks?.thumbnail = book.volumeInfo.imageLinks?.thumbnail
+                ?.replace("http", "https")
 
-                listOfBooks.add(book)
-            }
+            listOfBooks.add(book)
         }
         return listOfBooks
     }
